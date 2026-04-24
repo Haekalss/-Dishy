@@ -964,23 +964,27 @@
   @media (max-width: 640px) {
     nav {
       height: 64px;
-      padding: 0 14px;
-      grid-template-columns: auto 1fr;
-      gap: 10px;
+      padding: 0 10px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
     }
     .nav-logo {
-      max-width: 132px;
+      max-width: 104px;
+      min-width: 0;
     }
     .nav-logo img {
-      height: 34px;
+      width: 100%;
+      max-width: 104px;
+      height: auto;
     }
     .nav-social {
       justify-self: end;
-      gap: 12px;
+      gap: 8px;
+      flex-shrink: 0;
     }
     .nav-social a svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
 
     #home {
