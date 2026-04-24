@@ -31,7 +31,7 @@
     font-family: 'Barlow', sans-serif;
     font-weight: 300;
     cursor: none;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* CUSTOM CURSOR */
@@ -64,6 +64,8 @@
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
+    width: 100%;
+    max-width: 100%;
     z-index: 500;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
