@@ -23,7 +23,10 @@
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
 
   body {
     background: var(--black);
@@ -566,7 +569,8 @@
   .tour-item::before {
     content: '';
     position: absolute;
-    left: -48px; right: -48px;
+    left: 0;
+    right: 0;
     top: 0; bottom: 0;
     background: rgba(176,42,51,0.04);
     opacity: 0;
@@ -687,9 +691,10 @@
   }
   .about-frame {
     position: absolute;
-    bottom: -16px; right: -16px;
-    width: calc(100% - 32px);
-    height: calc(100% - 32px);
+    bottom: 0;
+    right: 0;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
     border: 2px solid rgba(176,42,51,0.45);
     box-shadow: 0 0 0 1px rgba(176,42,51,0.12);
     opacity: 0.62;
@@ -1098,10 +1103,10 @@
     }
     .about-visual { aspect-ratio: 5/4; }
     .about-frame {
-      bottom: -10px;
-      right: -10px;
-      width: calc(100% - 20px);
-      height: calc(100% - 20px);
+      bottom: 0;
+      right: 0;
+      width: calc(100% - 14px);
+      height: calc(100% - 14px);
     }
     .about-text { gap: 10px; }
     .about-text p {
