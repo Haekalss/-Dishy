@@ -1155,7 +1155,7 @@
     }
 
     #home {
-      height: 100dvh;
+      height: 100svh;
       min-height: 480px;
       align-items: center;
       background: #000;
@@ -1164,14 +1164,14 @@
       background: #000;
     }
     #home .hero-slider {
-      height: 100dvh;
+      height: 100svh;
       align-items: stretch;
       will-change: transform;
       backface-visibility: hidden;
     }
     #home .hero-slide {
       height: 100%;
-      max-height: 100dvh;
+      max-height: 100svh;
     }
     #home .hero-slide img {
       object-fit: cover;
@@ -1712,21 +1712,6 @@
 
     render();
   });
-</script>
-</script>
-<script>
-// Fix mobile vh bug: set #home & .hero-slider height to window.innerHeight
-function setHeroHeight() {
-  var hero = document.getElementById('home');
-  var heroBg = hero ? hero.querySelector('.hero-bg .hero-slider') : null;
-  var h = window.innerHeight;
-  if(hero) hero.style.height = h + 'px';
-  if(heroBg) heroBg.style.height = h + 'px';
-}
-window.addEventListener('resize', setHeroHeight);
-window.addEventListener('orientationchange', setHeroHeight);
-window.addEventListener('DOMContentLoaded', setHeroHeight);
-setTimeout(setHeroHeight, 100); // for mobile browser bar animation
 </script>
 </body>
 </html>
