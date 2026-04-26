@@ -173,22 +173,27 @@
     z-index: 1180;
   }
   .nav-drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    width: min(84vw, 320px);
-    background: rgba(12,12,12,0.98);
-    border-left: 1px solid var(--border);
-    box-shadow: -18px 0 60px rgba(0,0,0,0.45);
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    z-index: 1190;
-    display: flex;
-    flex-direction: column;
-    padding: 88px 24px 0;
-    padding-bottom: calc(28px + env(safe-area-inset-bottom, 16px));
-  }
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  height: 100dvh; /* override: dynamic viewport, memperhitungkan browser bar */
+  width: min(84vw, 320px);
+  background: rgba(12,12,12,0.98);
+  border-left: 1px solid var(--border);
+  box-shadow: -18px 0 60px rgba(0,0,0,0.45);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1190;
+  display: flex;
+  flex-direction: column;
+  padding: 88px 24px 0;
+  padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
+  overflow-y: auto;       /* ← supaya bisa scroll kalau konten overflow */
+  overflow-x: hidden;
+  overscroll-behavior: contain; /* ← mencegah scroll merembet ke halaman utama */
+  -webkit-overflow-scrolling: touch; /* ← smooth scroll di iOS */
+}
   .nav-drawer-header {
     display: flex;
     justify-content: flex-end;
@@ -222,16 +227,15 @@
   .nav-drawer-links a:hover {
     color: var(--white);
   }
- .nav-drawer-social {
+.nav-drawer-social {
   display: flex;
   gap: 16px;
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 24px;
   padding-bottom: env(safe-area-inset-bottom, 0px);
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0; /* ← jangan dikompres saat flex column */
 }
   .nav-drawer-social a {
     color: #b7b1a8;
