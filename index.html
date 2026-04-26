@@ -145,52 +145,22 @@
   }
   .nav-social a:hover { color: var(--red); }
   .nav-toggle {
-    display: none;
-    justify-self: end;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
-    color: var(--white);
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border-radius: 999px;
-    transition: border-color 0.2s, background 0.2s, transform 0.2s;
-  }
-  .nav-toggle:hover {
-    border-color: rgba(176,42,51,0.55);
-    background: rgba(176,42,51,0.1);
-  }
-  .nav-toggle-lines {
-    width: 18px;
-    height: 12px;
-    position: relative;
-    display: block;
-  }
-  .nav-toggle-lines span {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: currentColor;
-    border-radius: 999px;
-    transition: transform 0.25s ease, top 0.25s ease, opacity 0.2s ease;
-  }
-  .nav-toggle-lines span:nth-child(1) { top: 0; }
-  .nav-toggle-lines span:nth-child(2) { top: 5px; }
-  .nav-toggle-lines span:nth-child(3) { top: 10px; }
-  .nav-toggle.is-active .nav-toggle-lines span:nth-child(1) {
-    top: 5px;
-    transform: rotate(45deg);
-  }
-  .nav-toggle.is-active .nav-toggle-lines span:nth-child(2) {
-    opacity: 0;
-  }
-  .nav-toggle.is-active .nav-toggle-lines span:nth-child(3) {
-    top: 5px;
-    transform: rotate(-45deg);
-  }
+  display: none;
+  justify-self: end;
+  background: none;
+  border: none;
+  color: var(--white);
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+}
+.nav-toggle:hover {
+  color: var(--red);
+}
+/* Hapus juga .nav-toggle-lines dan semua span-nya — diganti SVG */
+ 
   .nav-backdrop {
     position: fixed;
     inset: 0;
@@ -216,23 +186,25 @@
     z-index: 1190;
     display: flex;
     flex-direction: column;
-    padding: 88px 24px 28px;
+    padding: 88px 24px 0;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 16px));
   }
   .nav-drawer-header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 28px;
   }
-  .nav-drawer-close {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--white);
-    font-size: 1.5rem;
-    line-height: 1;
-  }
+ .nav-drawer-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: color 0.2s;
+}
+.nav-drawer-close:hover { color: var(--white); }
   .nav-drawer-links {
     list-style: none;
     display: flex;
@@ -250,14 +222,17 @@
   .nav-drawer-links a:hover {
     color: var(--white);
   }
-  .nav-drawer-social {
-    display: flex;
-    gap: 16px;
-    margin-top: auto;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
+ .nav-drawer-social {
+  display: flex;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 20px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+}
   .nav-drawer-social a {
     color: #b7b1a8;
     text-decoration: none;
@@ -1379,17 +1354,21 @@ footer {
 </a>
   </div>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-controls="mobileMenu" aria-expanded="false">
-    <span class="nav-toggle-lines" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
-  </button>
+  <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+    <rect y="0" width="22" height="2" rx="1" fill="currentColor"/>
+    <rect y="7" width="16" height="2" rx="1" fill="currentColor"/>
+    <rect y="14" width="22" height="2" rx="1" fill="currentColor"/>
+  </svg>
+</button>
 </nav>
 <div class="nav-backdrop" id="navBackdrop" hidden></div>
 <aside class="nav-drawer" id="mobileMenu" aria-label="Menu mobile" aria-hidden="true">
   <div class="nav-drawer-header">
-    <button class="nav-drawer-close" id="navClose" type="button" aria-label="Tutup menu">X</button>
+    <button class="nav-drawer-close" id="navClose" type="button" aria-label="Tutup menu">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+</button>
   </div>
   <ul class="nav-drawer-links">
     <li><a href="#home">Home</a></li>
