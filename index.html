@@ -33,7 +33,7 @@
     color: var(--white);
     font-family: 'Barlow', sans-serif;
     font-weight: 300;
-    cursor: none;
+    cursor: auto;
     overflow-x: clip;
   }
   body.nav-open {
@@ -42,6 +42,7 @@
 
   /* CUSTOM CURSOR */
   .cursor {
+    display: none;
     position: fixed;
     width: 8px; height: 8px;
     background: var(--red);
@@ -52,7 +53,7 @@
     opacity: 0.9;
   }
   a, button, [role="button"], .single-card, .btn-ticket, .btn-whatsapp, .hero-cta {
-    cursor: none !important;
+    cursor: auto !important;
   }
 
   /* NOISE OVERLAY */
@@ -317,22 +318,43 @@
   .hero-title {
     width: min(68vw, 560px);
     height: clamp(96px, 16vw, 190px);
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 8px;
+    margin-left: auto;
+    margin-right: auto;
     opacity: 0;
     animation: fadeUp 0.9s 0.5s forwards;
   }
-  .hero-title img {
+  .hero-title .hero-logo-source,
+  .hero-title .hero-logo-display {
+    position: absolute;
+    inset: 0;
+    margin: auto;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center 68%;
+    object-position: center center;
     display: block;
     filter: drop-shadow(0 12px 28px rgba(0,0,0,0.52));
   }
-  .hero-title img.trippin-flicker {
+  .hero-title .hero-logo-source {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .hero-title .hero-logo-display {
+    display: none;
+  }
+  .hero-title.is-chroma-ready .hero-logo-source {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .hero-title.is-chroma-ready .hero-logo-display {
+    display: block;
+  }
+  .hero-title .trippin-flicker {
     animation: logoFlicker 11.5s ease-in-out infinite;
     transform-origin: center;
     will-change: opacity, filter, transform;
@@ -1200,12 +1222,17 @@
     }
     #home .hero-bg {
       background: #000;
+      left: -1px;
+      right: -1px;
+      width: calc(100% + 2px);
     }
     #home .hero-slider {
       height: 100svh;
       align-items: stretch;
       will-change: transform;
       backface-visibility: hidden;
+      width: calc(100% + 2px);
+      left: -1px;
     }
     #home .hero-slide {
       height: 100%;
@@ -1218,14 +1245,27 @@
       background: #000;
     }
    #home .hero-content {
-  padding: 0 20px 0;
-  transform: none !important;
-  margin-bottom: 40px; /* naikan konten dengan margin, bukan transform */
-}
+      padding: 0 20px 0;
+      transform: none !important;
+      margin-bottom: 0;
+    }
     .hero-title {
-      width: min(74vw, 300px);
-      height: clamp(62px, 20vw, 98px);
+      width: min(88vw, 360px);
+      height: clamp(72px, 24vw, 130px);
       margin-top: 4px;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+    }
+    .hero-title .hero-logo-source,
+    .hero-title .hero-logo-display {
+      transform: scale(1.08);
+    }
+    #home .hero-bg::after,
+    #home .hero-grid {
+      left: -1px;
+      right: -1px;
+      width: calc(100% + 2px);
     }
     .hero-eyebrow {
       font-size: 0.72rem;
@@ -1349,7 +1389,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-title img.trippin-flicker {
+    .hero-title .trippin-flicker {
       animation: none;
     }
     .hero-bg,
@@ -1435,7 +1475,12 @@
   <div class="hero-grid"></div>
   <div class="hero-content">
     <p class="hero-eyebrow">New EP Out Now</p>
-    <h1 class="hero-title"><img src="image/logoD.png" alt="Dishy"></h1>
+    <h1 class="hero-title">
+      <video class="hero-logo-source" autoplay muted loop playsinline preload="auto" aria-label="Dishy logo video">
+        <source src="image/0429.mp4" type="video/mp4">
+      </video>
+      <canvas class="hero-logo-display" role="img" aria-label="Dishy logo transparent video"></canvas>
+    </h1>
     <p class="hero-tagline">‘Attached to Decay’ has been released. Listen to it now and experience the atmosphere of Tinny Trippin Hardcore.</p>
     <div class="hero-cta-wrap">
       <a href="#music" class="hero-cta">
@@ -1638,13 +1683,194 @@
 
   // HERO PARALLAX + LOGO FLICKER
   const heroSection = document.getElementById('home');
+  const heroTitle = heroSection?.querySelector('.hero-title');
   const heroBackground = heroSection?.querySelector('.hero-bg');
   const heroGrid = heroSection?.querySelector('.hero-grid');
-  const heroLogo = heroSection?.querySelector('.hero-title img');
+  const heroLogoSource = heroSection?.querySelector('.hero-title .hero-logo-source');
+  const heroLogoDisplay = heroSection?.querySelector('.hero-title .hero-logo-display');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const isMobileLike = window.matchMedia('(max-width: 640px), (hover: none), (pointer: coarse)');
+
+  const setupHeroLogoChromaKey = () => {
+    if (!heroTitle || !heroLogoSource || !heroLogoDisplay) return;
+
+    const displayCtx = heroLogoDisplay.getContext('2d', { willReadFrequently: true });
+    if (!displayCtx) return;
+
+    const workCanvas = document.createElement('canvas');
+    const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
+    if (!workCtx) return;
+
+    let rafId = null;
+    let renderTick = 0;
+    let activeScale = 1;
+
+    const syncCanvasSize = () => {
+      if (!heroLogoSource.videoWidth || !heroLogoSource.videoHeight) return false;
+      const nextScale = isMobileLike.matches ? 0.6 : 1;
+      const nextWidth = Math.max(1, Math.round(heroLogoSource.videoWidth * nextScale));
+      const nextHeight = Math.max(1, Math.round(heroLogoSource.videoHeight * nextScale));
+
+      if (activeScale !== nextScale || heroLogoDisplay.width !== nextWidth || heroLogoDisplay.height !== nextHeight) {
+        activeScale = nextScale;
+        heroLogoDisplay.width = nextWidth;
+        heroLogoDisplay.height = nextHeight;
+        workCanvas.width = nextWidth;
+        workCanvas.height = nextHeight;
+      }
+      return true;
+    };
+
+    const renderFrame = () => {
+      rafId = null;
+      if (heroLogoSource.paused || heroLogoSource.ended) return;
+      const frameStep = isMobileLike.matches ? 2 : 1;
+      if (renderTick % frameStep !== 0) {
+        renderTick += 1;
+        rafId = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+      renderTick += 1;
+      if (heroLogoSource.readyState < 2) {
+        rafId = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+      if (!syncCanvasSize()) {
+        rafId = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      workCtx.clearRect(0, 0, workCanvas.width, workCanvas.height);
+      workCtx.drawImage(heroLogoSource, 0, 0, workCanvas.width, workCanvas.height);
+      const frame = workCtx.getImageData(0, 0, workCanvas.width, workCanvas.height);
+      const pixels = frame.data;
+      const width = workCanvas.width;
+      const height = workCanvas.height;
+      const alphaBuffer = new Uint8ClampedArray(width * height);
+
+      const clamp01 = (value) => Math.max(0, Math.min(1, value));
+      const targetHue = 120;
+
+      const rgbToHue = (red, green, blue) => {
+        const max = Math.max(red, green, blue);
+        const min = Math.min(red, green, blue);
+        const delta = max - min;
+        if (delta === 0) return -1;
+
+        let hue;
+        if (max === red) {
+          hue = ((green - blue) / delta) % 6;
+        } else if (max === green) {
+          hue = (blue - red) / delta + 2;
+        } else {
+          hue = (red - green) / delta + 4;
+        }
+
+        hue *= 60;
+        if (hue < 0) hue += 360;
+        return hue;
+      };
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const red = pixels[i];
+        const green = pixels[i + 1];
+        const blue = pixels[i + 2];
+        const maxChannel = Math.max(red, green, blue);
+        const minChannel = Math.min(red, green, blue);
+        const saturation = maxChannel === 0 ? 0 : (maxChannel - minChannel) / maxChannel;
+        const hue = rgbToHue(red, green, blue);
+
+        let alpha = 255;
+        if (hue >= 0) {
+          const hueDistance = Math.min(Math.abs(hue - targetHue), 360 - Math.abs(hue - targetHue));
+          const hueScore = clamp01(1 - (hueDistance / 52));
+          const saturationScore = clamp01((saturation - 0.22) / 0.52);
+          const greenEnergy = clamp01(((green - Math.max(red, blue)) - 18) / 88);
+          const brightness = clamp01((maxChannel - 36) / 180);
+
+          const matte = clamp01((hueScore * 0.48) + (saturationScore * 0.24) + (greenEnergy * 0.22) + (brightness * 0.06));
+          if (matte > 0.1) {
+            alpha = Math.round(255 * (1 - matte));
+          }
+        }
+
+        alphaBuffer[i / 4] = alpha;
+
+        if (alpha < 255) {
+          const spill = Math.round((255 - alpha) * 0.11);
+          pixels[i + 1] = Math.max(0, green - spill);
+          pixels[i] = Math.max(0, red - Math.round(spill * 0.22));
+          pixels[i + 2] = Math.max(0, blue - Math.round(spill * 0.22));
+        }
+      }
+
+      const featheredAlpha = new Uint8ClampedArray(alphaBuffer);
+      for (let y = 1; y < height - 1; y += 1) {
+        for (let x = 1; x < width - 1; x += 1) {
+          const idx = y * width + x;
+          const center = alphaBuffer[idx];
+          if (center === 255 || center === 0) continue;
+
+          const sum =
+            alphaBuffer[idx - width - 1] + alphaBuffer[idx - width] + alphaBuffer[idx - width + 1] +
+            alphaBuffer[idx - 1] + center + alphaBuffer[idx + 1] +
+            alphaBuffer[idx + width - 1] + alphaBuffer[idx + width] + alphaBuffer[idx + width + 1];
+
+          featheredAlpha[idx] = Math.round(sum / 9);
+        }
+      }
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        pixels[i + 3] = featheredAlpha[i / 4];
+      }
+
+      displayCtx.clearRect(0, 0, heroLogoDisplay.width, heroLogoDisplay.height);
+      displayCtx.putImageData(frame, 0, 0);
+      heroTitle.classList.add('is-chroma-ready');
+
+      rafId = window.requestAnimationFrame(renderFrame);
+    };
+
+    const startRender = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(renderFrame);
+    };
+
+    const stopRender = () => {
+      if (rafId === null) return;
+      window.cancelAnimationFrame(rafId);
+      rafId = null;
+    };
+
+    heroLogoSource.addEventListener('loadedmetadata', syncCanvasSize);
+    isMobileLike.addEventListener?.('change', syncCanvasSize);
+    heroLogoSource.addEventListener('play', startRender);
+    heroLogoSource.addEventListener('pause', stopRender);
+    heroLogoSource.addEventListener('ended', stopRender);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopRender();
+        return;
+      }
+      if (!heroLogoSource.paused) startRender();
+    });
+
+    const playPromise = heroLogoSource.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        // Keep fallback video visible if autoplay is blocked.
+      });
+    }
+
+    if (!heroLogoSource.paused) startRender();
+  };
+
+  setupHeroLogoChromaKey();
 
   if (!prefersReducedMotion.matches) {
-    heroLogo?.classList.add('trippin-flicker');
+    heroLogoSource?.classList.add('trippin-flicker');
+    heroLogoDisplay?.classList.add('trippin-flicker');
 
     let ticking = false;
     const updateHeroParallax = () => {
