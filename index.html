@@ -1749,7 +1749,7 @@
       const alphaBuffer = new Uint8ClampedArray(width * height);
 
       const clamp01 = (value) => Math.max(0, Math.min(1, value));
-      const targetHue = 120;
+      const targetHue = 122;
 
       const rgbToHue = (red, green, blue) => {
         const max = Math.max(red, green, blue);
@@ -1783,13 +1783,13 @@
         let alpha = 255;
         if (hue >= 0) {
           const hueDistance = Math.min(Math.abs(hue - targetHue), 360 - Math.abs(hue - targetHue));
-          const hueScore = clamp01(1 - (hueDistance / 52));
-          const saturationScore = clamp01((saturation - 0.22) / 0.52);
-          const greenEnergy = clamp01(((green - Math.max(red, blue)) - 18) / 88);
-          const brightness = clamp01((maxChannel - 36) / 180);
+          const hueScore = clamp01(1 - (hueDistance / 34));
+          const saturationScore = clamp01((saturation - 0.14) / 0.44);
+          const greenEnergy = clamp01(((green - Math.max(red, blue)) - 10) / 70);
+          const brightness = clamp01((maxChannel - 24) / 160);
 
-          const matte = clamp01((hueScore * 0.48) + (saturationScore * 0.24) + (greenEnergy * 0.22) + (brightness * 0.06));
-          if (matte > 0.1) {
+          const matte = clamp01((hueScore * 0.58) + (saturationScore * 0.2) + (greenEnergy * 0.22));
+          if (matte > 0.04) {
             alpha = Math.round(255 * (1 - matte));
           }
         }
@@ -1816,7 +1816,13 @@
             alphaBuffer[idx - 1] + center + alphaBuffer[idx + 1] +
             alphaBuffer[idx + width - 1] + alphaBuffer[idx + width] + alphaBuffer[idx + width + 1];
 
-          featheredAlpha[idx] = Math.round(sum / 9);
+          featheredAlpha[idx] = Math.min(255, Math.round((sum / 9) * 0.78));
+        }
+      }
+
+      for (let i = 0; i < featheredAlpha.length; i += 1) {
+        if (featheredAlpha[i] < 28) {
+          featheredAlpha[i] = 0;
         }
       }
 
