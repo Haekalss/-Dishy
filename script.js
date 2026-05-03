@@ -19,7 +19,6 @@ if (navbar) {
 const heroSection = document.getElementById('home');
 const heroTitle = heroSection?.querySelector('.hero-title');
 const heroBackground = heroSection?.querySelector('.hero-bg');
-const heroGrid = heroSection?.querySelector('.hero-grid');
 const heroLogoSource = heroSection?.querySelector('.hero-title .hero-logo-source');
 const heroLogoDisplay = heroSection?.querySelector('.hero-title .hero-logo-display');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -215,7 +214,7 @@ if (!prefersReducedMotion.matches) {
   let ticking = false;
   const updateHeroParallax = () => {
     ticking = false;
-    if (!heroSection || !heroBackground || !heroGrid) return;
+    if (!heroSection || !heroBackground) return;
 
     const rect = heroSection.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
@@ -223,9 +222,7 @@ if (!prefersReducedMotion.matches) {
     if (!isVisible) return;
 
     const bgOffset = Math.max(-30, Math.min(30, rect.top * -0.06));
-    const gridOffset = Math.max(-42, Math.min(42, rect.top * -0.09));
     heroBackground.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
-    heroGrid.style.transform = `translate3d(0, ${gridOffset}px, 0)`;
   };
 
   const onParallaxScroll = () => {
