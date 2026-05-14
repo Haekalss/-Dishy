@@ -220,7 +220,7 @@
   <p class="section-label reveal">Official Merch</p>
   <h2 class="section-title reveal">Merch</h2>
   <div class="merch-grid">
-    <div class="merch-card reveal">
+    <div class="merch-card reveal" data-sold-out="true">
       <div class="merch-gallery" data-merch-gallery>
         <div class="merch-track">
           <div class="merch-slide">
@@ -236,13 +236,16 @@
           <button class="merch-dot active" type="button" aria-label="Lihat foto merch"></button>
           <button class="merch-dot" type="button" aria-label="Lihat size chart"></button>
         </div>
+        <div class="merch-overlay active" role="status" aria-label="Produk sold out">
+          <img src="image/soldout.png" alt="Sold Out">
+        </div>
       </div>
       <div class="merch-body">
         <p class="merch-type">T-Shirt</p>
         <h3>Attached to Decay Tee</h3>
         <p>T-Shirt official dengan artwork Attached to Decay.</p>
         <span class="merch-price">Rp 150.000</span>
-        <a href="https://wa.me/6285777568077?text=Halo%20DISHY,%20saya%20mau%20pesan%20Attached%20to%20Decay%20Tee." target="_blank" class="btn-whatsapp">Get It Now</a>
+        <button class="btn-whatsapp btn-sold-out" type="button" disabled>Sold Out</button>
       </div>
     </div>
   </div>

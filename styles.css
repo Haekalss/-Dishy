@@ -995,8 +995,63 @@ color: var(--grey);
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  transition: none;
+  transition: all 0.3s ease;
+  background: transparent;
+  cursor: pointer;
 }
+.btn-whatsapp:hover:not(:disabled) {
+  background: #25d366;
+  color: var(--black);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+.btn-whatsapp:disabled,
+.btn-sold-out {
+  border-color: #666;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.btn-whatsapp:disabled:hover,
+.btn-sold-out:hover {
+  background: transparent;
+  box-shadow: none;
+}
+/* SOLD OUT OVERLAY */
+.merch-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 3;
+}
+.merch-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.merch-overlay img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(208, 42, 51, 0.3));
+  animation: stampPulse 0.5s ease-out;
+}
+@keyframes stampPulse {
+  from {
+    transform: scale(0.8) rotate(-2deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
 .btn-whatsapp:hover {
   background: #25d366;
   color: #0a0a0a;
