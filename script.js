@@ -7,6 +7,27 @@ if (cursor) {
   });
 }
 
+// NAVIGATION WITHOUT HASH
+document.querySelectorAll('[data-section]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sectionId = link.getAttribute('data-section');
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+      // Update browser history without hash
+      window.history.pushState(null, '', `/${sectionId}`);
+      // Close mobile menu if open
+      const mobileMenu = document.getElementById('mobileMenu');
+      const navToggle = document.getElementById('navToggle');
+      if (mobileMenu && !mobileMenu.hasAttribute('hidden')) {
+        mobileMenu.setAttribute('hidden', '');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+});
+
 // NAV SCROLL
 const navbar = document.getElementById('navbar');
 if (navbar) {
