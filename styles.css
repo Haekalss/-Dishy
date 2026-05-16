@@ -1435,10 +1435,10 @@ footer {
   }
   .about-visual { aspect-ratio: 5/4; }
   .about-frame {
-    bottom: 0;
-    right: 0;
-    width: calc(100% - 14px);
-    height: calc(100% - 14px);
+    bottom: 12px;
+    right: 11.5px;
+    width: calc(100% - 23.5px);
+    height: calc(100% - 23px);
   }
   .about-text { gap: 10px; }
   .about-text p {
