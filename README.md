@@ -1,46 +1,26 @@
-# Dishy Website Repository
+# Dishy Official Website #
+Official website for the band Dishy. This repository contains the source code for the band's official digital presence, featuring discography, tour schedules, merchandise, and information.
 
-## Tentang Repo Ini
+# Design Philosophy # 
+The website is designed with a high-contrast, analog-inspired aesthetic to reflect Dishy's artistic atmosphere. It is built to provide a fast, immersive, and seamless experience for fans on both desktop and mobile devices.
 
-Repository ini berisi source code website resmi Dishy.
-Fokus utamanya adalah landing page band yang menampilkan identitas visual, rilisan musik, jadwal tampil, profil band, dan official merch dalam satu halaman.
+# Features #
+Hero Section: Dynamic background slider with atmospheric noise overlays and branding.
 
-Repo ini menggunakan pendekatan static website tanpa framework, sehingga mudah dijalankan, mudah di-maintain, dan ringan untuk deployment.
+Discography: Showcase of EPs and singles with direct streaming links.
 
-## Tentang Website Ini
+Tour Dates: A clean schedule tracking upcoming and past tour dates.
 
-Website ini dibuat untuk menjadi halaman resmi Dishy dengan tujuan:
+Merchandise: An interactive gallery showcasing official band merchandise.
 
-- Menampilkan branding dan atmosfer visual band
-- Mengarahkan pengunjung ke platform streaming musik
-- Menampilkan informasi tur dan jadwal event
-- Menyediakan informasi merch resmi
-- Menjadi pusat informasi singkat yang cepat diakses di desktop maupun mobile
+Responsiveness: Optimized layout for a smooth browsing experience across all screen sizes.
 
-## Teknologi yang Dipakai
+Performance: Built using modern web standards for fast loading and optimized asset delivery.
 
-- HTML5 untuk struktur konten
-- CSS3 untuk visual styling dan responsive layout
-- JavaScript vanilla untuk interaksi halaman
+# About the Project
+This repository holds the official source code for Dishy's digital presence. It is structured to maintain the band's visual consistency and provide fans with quick access to essential information.
 
-Tidak ada dependency framework frontend atau build tool khusus.
+# Contact
+For inquiries or further information, please refer to the contact details provided on the website.
 
-## Struktur Utama Project
-
-- index.html: struktur halaman utama
-- styles.css: seluruh styling website
-- script.js: seluruh interaksi dan behavior website
-- image/: aset gambar, logo, dan video
-
-## Fitur Website
-
-- Hero section dengan slideshow background
-- Efek video logo ke canvas (chroma key)
-- Parallax ringan pada area hero
-- Navigasi desktop dan mobile drawer
-- Reveal animation saat scroll
-- Merch gallery dengan kontrol prev/next/dots
-- Link ke Spotify, Instagram, YouTube, Apple Music, dan kontak
-
-
-
+All rights reserved. Dishy © 2026.

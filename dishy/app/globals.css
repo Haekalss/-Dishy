@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Tambahkan keyframes murni di sini */
+@layer utilities {
+  @keyframes fadeUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(30px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes heroSlide {
+    from { 
+      transform: translateX(0); 
+    }
+    to { 
+      transform: translateX(-500vw); 
+    }
+  }
+
+  @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+}
